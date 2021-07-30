@@ -1,0 +1,10 @@
+extend layout
+
+block content
+
+  h2= title
+
+  ul
+    each gear in gear_list
+      li #{gear.brand + ' ' + gear.model} #{gear.speeds} speeds
+      

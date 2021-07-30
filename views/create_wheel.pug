@@ -1,0 +1,21 @@
+extend layout
+
+block content
+
+  h2= title
+  form(action='' method='POST')
+    label( for='brand') Brand:
+    input( name='brand' value=inputs ? inputs.brand:'' )
+    label( for='model') Model:
+    input( name='model' value=inputs ? inputs.model:'')
+    label( for='size') Size:
+    input( name='size' value=inputs ? inputs.size:'')
+    label( for='width') Width:
+    input( name='width' value=inputs ? inputs.width:'')
+    button( type='submit') Submit
+  
+  if !!errors
+    ul Errors
+      each error in errors
+        li #{error.msg}
+    

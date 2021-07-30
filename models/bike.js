@@ -4,7 +4,9 @@ const Schema = mongoose.Schema
 const bike_schema = new Schema({
   brand: { type: String, max_length: 100},
   model: { type: String, max_length: 100},
-  suspension: {type: Schema.Types.ObjectId, ref: 'suspension'},
+  wheels: {type: Schema.Types.ObjectId, ref: 'wheels'},
+  suspension_front: {type: Schema.Types.ObjectId, ref: 'suspension'},
+  suspension_rear: {type: Schema.Types.ObjectId, ref: 'suspension'},
   gear: {type: Schema.Types.ObjectId, ref: 'gear'},
   bike_category: {type: Schema.Types.ObjectId, ref: 'bike_category'},
   category: {type: Schema.Types.ObjectId, ref: 'category'},

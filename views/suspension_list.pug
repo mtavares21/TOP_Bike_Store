@@ -1,0 +1,14 @@
+extend layout
+
+block content
+
+  h2= title
+
+  ul
+    each sus in sus_list
+      li #{sus.brand + ' ' + sus.model}
+        dl
+          dt Travel:
+          dd #{sus.travel}mm
+          dt Type:
+          dd #{sus.position}

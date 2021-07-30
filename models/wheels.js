@@ -4,7 +4,7 @@ const Schema = mongoose.Schema
 const wheels_schema = new Schema({
   brand: { type: String, max_length: 100},
   model: { type: String, max_length: 100},
-  size: { type: String, enum: ['rear', 'front']},
+  size: { type: Number, max_length:10 },
   width: { type: Number, max_length: 100},
   category: {type: Schema.Types.ObjectId, ref: 'category'},
   comp_cat: {type: Schema.Types.ObjectId, ref: 'comp_cat'},

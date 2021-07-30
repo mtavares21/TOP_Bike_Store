@@ -1,0 +1,14 @@
+extend layout
+
+block content
+
+  h2= title
+
+  ul
+    each wheel in wheel_list
+      li #{wheel.brand + ' ' + wheel.model}
+        dl
+          dt Size:
+          dd #{wheel.size}
+          dt Width:
+          dd #{wheel.width}

@@ -1,0 +1,18 @@
+extend layout
+
+block content
+
+  h2=title
+
+  ul
+    each bike in bike_list
+      li
+        h5 #{bike.brand}  #{bike.model}
+        dl 
+          dt #{!!bike.suspension_front || !!bike.suspension_rear ? 'Suspension:':null}
+            dd #{!!bike.suspension_front? 'Front: ' + bike.suspension_front.brand + ' ' + bike.suspension_front.model + bike.suspension_front.travel: null}
+            dd #{!!bike.suspension_rear? 'Rear: ' + bike.suspension_rear.brand + ' ' + bike.suspension_rear.model + bike.suspension_rear.travel: null}
+          dt Gear:
+          dd #{bike.gear.brand} #{bike.gear.model} #{bike.gear.speeds}speeds
+          dt Wheels:
+          dd #{bike.wheels.brand} #{bike.wheels.model} #{bike.wheels.size}in

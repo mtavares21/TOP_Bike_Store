@@ -1,0 +1,25 @@
+extend layout
+
+block content
+
+  h2= title
+  form(action='' method='POST')
+    label( for='brand') Brand:
+    input( name='brand' value=inputs ? inputs.brand:'' )
+    label( for='model') Model:
+    input( name='model' value=inputs ? inputs.model:'')
+    label( for='travel') Travel:
+    input( name='travel' value=inputs ? inputs.size:'')
+    label( for='position' style={width:'100%'}) Position:
+    div#position
+      input#front(type='radio' name='position' value='front' checked='')
+      label(for='front') Front
+      input#rear(type='radio' name='position' value='rear')
+      label(for='Rear') Rear
+    button( type='submit') Submit
+  
+  if !!errors
+    ul Errors
+      each error in errors
+        li #{error.msg}
+    

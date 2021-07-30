@@ -1,0 +1,19 @@
+extend layout
+
+block content
+
+  h2= title
+  form(action='' method='POST')
+    label( for='brand') Brand:
+    input( name='brand' value=inputs ? inputs.brand:'' )
+    label( for='model') Model:
+    input( name='model' value=inputs ? inputs.model:'')
+    label( for='speeds') Speeds:
+    input( name='speeds' value=inputs ? inputs.speeds:'')
+    button( type='submit') Submit
+  
+  if !!errors
+    ul Errors
+      each error in errors
+        li #{error.msg}
+    

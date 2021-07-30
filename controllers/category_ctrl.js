@@ -12,13 +12,13 @@ exports.get_list = function(req, res){
       if (err) {
         return next(err);
       }
-      res.render("main_index", {
+      res.render("index", {
         title: "Main categories",
         category_list: list,
       });
     });
 }
-}
+
 
 exports.get_item = function(req, res) {
   res.send('get_item')

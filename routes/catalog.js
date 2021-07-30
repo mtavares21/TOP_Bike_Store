@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 // Require controller modules.
+const category_ctrl = require('../controllers/category_ctrl')
 const bike_category_ctrl = require('../controllers/bike_category_ctrl') 
 const bike_ctrl = require('../controllers/bike_ctrl')
 const components_category_ctrl = require('../controllers/components_category_ctrl')
@@ -10,50 +11,44 @@ const suspension_ctrl = require('../controllers/suspension_ctrl')
 const gear_ctrl = require('../controllers/gear_ctrl')
 
 // GET catalog home page.
-router.get('/', bike_category_ctrl.get_category_list)
+router.get('/', category_ctrl.get_list)
 
                 // BIKE ROUTES //
 
 // Bike Index (road, mountain, etc)
-router.get('/bikes', bike_category_ctrl.get_category_list)
+router.get('/bikes', bike_category_ctrl.get_list)
 
 // GET request for a bike list
-router.get('/bikes/:catName', bike_ctrl.get_bike_list)
+router.get('/bikes/:catName', bike_ctrl.get_list)
 
 //GET request for creating bike.
-router.get('/bike/create', bike_ctrl.get_create_bike)
+router.get('/bike/create', bike_ctrl.get_create)
 
 //POST request for creating bike.
-router.post('/bike/create', bike_ctrl.post_create_bike)
+router.post('/bike/create', bike_ctrl.post_create)
 
 // GET request to delete bike.
-router.get('/bike/:id/delete', bike_ctrl.get_delete_bike)
+router.get('/bike/:id/delete', bike_ctrl.get_delete)
 
 // POST request to delete bike.
-router.post('/bike/:id/delete', bike_ctrl.post_delete_bike)
+router.post('/bike/:id/delete', bike_ctrl.post_delete)
 
 // GET request to update bike.
-router.get('/bike/:id/update', bike_ctrl.get_update_bike)
+router.get('/bike/:id/update', bike_ctrl.get_update)
 
 // POST request to update bike.
-router.post('/bike/:id/update', bike_ctrl.post_update_bike)
+router.post('/bike/:id/update', bike_ctrl.post_update)
 
 // GET bike
-router.get('/bikes/:catName/:id/', bike_ctrl.get_bike)
-router.get('/bike/:id/', bike_ctrl.get_bike)
+router.get('/bikes/:catName/:id/', bike_ctrl.get_item)
+router.get('/bike/:id/', bike_ctrl.get_item)
 
             // COMPONENTS ROUTES //
 
-// Components Index (suspension)
+// Components Index 
 router.get('/components', components_category_ctrl.get_list)
 
 // WHEELS \\
-
-// READ
-//GET 
-router.get('/components/wheels', wheels_ctrl.get_list)
-//GET
-router.get('/components/wheels/:d', wheels_ctrl.get_item)
 
 // CREATE
 // GET 
@@ -73,12 +68,14 @@ router.get('/components/wheel/:id/update', wheels_ctrl.get_update)
 // POST
 router.post('/components/wheel/:id/update', wheels_ctrl.post_update)
 
-// SUSPENSION \\
-
 // READ
-// GET
-router.get('/components/suspensions', suspension_ctrl.get_list)
-router.get('/components/suspension/:id', suspension_ctrl.get_item)
+//GET 
+router.get('/components/wheels', wheels_ctrl.get_list)
+//GET
+router.get('/components/wheels/:d', wheels_ctrl.get_item)
+
+
+// SUSPENSION \\
 
 // CREATE
 // GET
@@ -98,12 +95,12 @@ router.get('/components/suspension/:id/update', suspension_ctrl.get_update)
 //POST
 router.post('/components/suspension/:id/update', suspension_ctrl.post_update)
 
-// GEAR \\
-
 // READ
 // GET
-router.get('/components/gears', gear_ctrl.get_list)
-router.get('/components/gear/:id', gear_ctrl.get_item)
+router.get('/components/suspensions', suspension_ctrl.get_list)
+router.get('/components/suspension/:id', suspension_ctrl.get_item)
+
+// GEAR \\
 
 // CREATE
 // GET
@@ -122,4 +119,10 @@ router.post('/components/gear/:id/delete', gear_ctrl.post_delete)
 router.get('./components/gear/:id/update', gear_ctrl.get_update)
 //POST
 router.post('./components/gear/:id/update', gear_ctrl.post_update)
+
+// READ
+// GET
+router.get('/components/gears', gear_ctrl.get_list)
+router.get('/components/gear/:id', gear_ctrl.get_item)
+
 module.exports = router

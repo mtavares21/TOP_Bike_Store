@@ -1,5 +1,34 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
+  h4= title
+
+  aside
+   ul
+    li Categories
+      ul
+        li Bikes
+          ul
+            li 
+              a(href="catalog/bikes/mountain") Mountain
+            li 
+              a(href="catalog/bikes/road") Road
+        li Components
+          ul
+            li 
+              a(href="catalog/components/suspensions") Suspensions
+            li 
+               a(href="catalog/components/gears") Gears
+            li 
+              a(href="catalog/components/wheels") Wheels
+      li Create
+        ul
+          li 
+            a(href="catalog/bike/create") Bike
+          li 
+            a(href="catalog/components/suspension/create") Suspension
+          li 
+            a(href="catalog/components/gear/create") Gear
+          li 
+            a(href="catalog/components/wheel/create") Wheel
+   

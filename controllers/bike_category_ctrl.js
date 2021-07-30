@@ -5,14 +5,16 @@ const { body, validationResult } = require("express-validator");
 const Bike = require('../models/bike');
 const BikeCategory = require('../models/bike_category')
 
-exports.get_category_list = function (req, res) {
+// READ
+//GET
+exports.get_list = function (req, res) {
    BikeCategory.find()
     .sort("name")
     .exec(function (err, list) {
       if (err) {
         return next(err);
       }
-      res.render("genre_list", {
+      res.render("bike_index", {
         title: "Bike Category",
         category_list: list,
       });

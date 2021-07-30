@@ -31,12 +31,11 @@ const suspensions = []
 const wheels = []
 const gears = []
 
-function bikeCreate( brand, model, wheels, suspension, gear, bike_category, category, price) {
+function bikeCreate( brand, model, wheels, suspension_front, suspension_rear, gear, bike_category, category, price) {
 
   const bikeDetail = Object.assign(
     {},
-    { brand, model, wheels, suspension, gear, bike_category, category, price }
-  );
+    { brand, model, wheels, suspension_front, suspension_rear, gear, bike_category, category, price })
 
   const bike = new Bike(bikeDetail);
 
@@ -151,10 +150,10 @@ function createCategories(cb) {
           categoryCreate('bikes', callback);
         },
         function(callback) {
-          bikeCategoryCreate('mountain', callback)
+          bikeCategoryCreate('road', callback)
         },
         function(callback) {
-          bikeCategoryCreate('road', callback)
+          bikeCategoryCreate('mountain', callback)
         },
         function(callback) {
           createCompCat('wheels', callback)
@@ -212,22 +211,28 @@ function createComponents(cb) {
 function createBikes(cb) {
     async.parallel([
         function(callback) {
-          bikeCreate( 'Specialized', 'P2',wheels[0], suspensions[2], gears[2], bikeCategories[1], categories[1], '1800',cb)
+          bikeCreate( 'Specialized', 'P2',wheels[0], suspensions[0],null, gears[2], bikeCategories[1], categories[1], '1800',cb)
         },
           function(callback) {
-          bikeCreate( 'Specialized', 'Roadster',wheels[2], suspensions[0], gears[0], bikeCategories[0], categories[1],'950' ,cb)
-        },
-          function(callback) {
-          bikeCreate( 'Trek', '5000',wheels[1], suspensions[3], gears[0], bikeCategories[1], categories[1], '1500',cb)
-        },
-          function(callback) {
-          bikeCreate( 'Kona', 'Stinky',wheels[1], suspensions[2], gears[2], bikeCategories[1], categories[1], '3456',cb)
+          bikeCreate( 'Specialized', 'Roadster',wheels[2], null, null, gears[0], bikeCategories[0], categories[1],'950' ,cb)
         },
         function(callback) {
-          bikeCreate( 'Kona', 'Stinky',wheels[1], suspensions[1], gears[2], bikeCategories[1], categories[1], '3456',cb)
+          bikeCreate( 'Merida', 'Gonzalez',wheels[2], null, null, gears[0], bikeCategories[0], categories[1],'950' ,cb)
         },
         function(callback) {
-          bikeCreate( 'Kona', 'Stinky',wheels[1], suspensions[1], gears[2], bikeCategories[1], categories[1], '3456',cb)
+          bikeCreate( 'Trek', 'Wind',wheels[2], null, null, gears[1], bikeCategories[0], categories[1],'1550' ,cb)
+        },
+          function(callback) {
+          bikeCreate( 'Trek', '5000',wheels[1], suspensions[0], null, gears[0], bikeCategories[1], categories[1], '1500',cb)
+        },
+          function(callback) {
+          bikeCreate( 'Kona', 'Stinky',wheels[1], suspensions[0], suspensions[2], gears[2], bikeCategories[1], categories[1], '3456',cb)
+        },
+        function(callback) {
+          bikeCreate( 'Mondraker', 'Stinky',wheels[1], suspensions[1], suspensions[2], gears[2], bikeCategories[1], categories[1], '3456',cb)
+        },
+        function(callback) {
+          bikeCreate( 'BH', 'Alpine',wheels[1], suspensions[1], gears[2], bikeCategories[1], categories[1], '3456',cb)
         }
         ],
    
@@ -235,8 +240,6 @@ function createBikes(cb) {
         cb);
 }
 
-
- console.log('ComCat Array'+compCats)
 async.series([
     createCategories,
     createComponents,
