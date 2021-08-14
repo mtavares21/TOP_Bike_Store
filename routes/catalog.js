@@ -9,6 +9,7 @@ const components_category_ctrl = require('../controllers/components_category_ctr
 const wheels_ctrl = require('../controllers/wheels_ctrl')
 const suspension_ctrl = require('../controllers/suspension_ctrl')
 const gear_ctrl = require('../controllers/gear_ctrl')
+const ADMIN = process.env.ADMIN_PASS
 
 // GET catalog home page.
 router.get('/', category_ctrl.get_list)
@@ -28,10 +29,10 @@ router.get('/bike/create', bike_ctrl.get_create)
 router.post('/bike/create', bike_ctrl.post_create)
 
 // GET request to delete bike.
-router.get('/bike/:id/delete', bike_ctrl.get_delete)
+router.get('/bikes/:catName/:id/delete', bike_ctrl.get_delete)
 
 // POST request to delete bike.
-router.post('/bike/:id/delete', bike_ctrl.post_delete)
+router.post('/bikes/:catName/:id/delete', bike_ctrl.post_delete)
 
 // GET request to update bike.
 router.get('/bike/:id/update', bike_ctrl.get_update)
@@ -58,15 +59,15 @@ router.post('/components/wheel/create', wheels_ctrl.post_create)
 
 // DELETE
 // GET
-router.get('/components/wheel/:id/delete', wheels_ctrl.get_delete)
+router.get('/components/wheels/:id/delete', wheels_ctrl.get_delete)
 // POST
-router.post('/components/wheel/:id/delete', wheels_ctrl.post_delete)
+router.post('/components/wheels/:id/delete', wheels_ctrl.post_delete)
 
 // UPDATE
 // GET
-router.get('/components/wheel/:id/update', wheels_ctrl.get_update)
+router.get('/components/wheels/:id/update', wheels_ctrl.get_update)
 // POST
-router.post('/components/wheel/:id/update', wheels_ctrl.post_update)
+router.post('/components/wheels/:id/update', wheels_ctrl.post_update)
 
 // READ
 //GET 
@@ -85,15 +86,15 @@ router.post('/components/suspension/create', suspension_ctrl.post_create)
 
 // DELETE
 // GET
-router.get('/components/suspension/:id/delete', suspension_ctrl.get_delete)
+router.get('/components/suspensions/:id/delete', suspension_ctrl.get_delete)
 // POST
-router.post('/components/suspension/:id/delete', suspension_ctrl.post_delete)
+router.post('/components/suspensions/:id/delete', suspension_ctrl.post_delete)
 
 // UPDATE
 // GET
-router.get('/components/suspension/:id/update', suspension_ctrl.get_update)
+router.get('/components/suspensions/:id/update', suspension_ctrl.get_update)
 //POST
-router.post('/components/suspension/:id/update', suspension_ctrl.post_update)
+router.post('/components/suspensions/:id/update', suspension_ctrl.post_update)
 
 // READ
 // GET
@@ -110,15 +111,15 @@ router.post('/components/gear/create', gear_ctrl.post_create)
 
 // DELETE
 // GET
-router.get('/components/gear/:id/delete', gear_ctrl.get_delete)
+router.get('/components/gears/:id/delete', gear_ctrl.get_delete)
 // POST
-router.post('/components/gear/:id/delete', gear_ctrl.post_delete)
+router.post('/components/gears/:id/delete', gear_ctrl.post_delete)
 
 // UPDATE
 // GET
-router.get('./components/gear/:id/update', gear_ctrl.get_update)
+router.get('./components/gears/:id/update', gear_ctrl.get_update)
 //POST
-router.post('./components/gear/:id/update', gear_ctrl.post_update)
+router.post('./components/gears/:id/update', gear_ctrl.post_update)
 
 // READ
 // GET

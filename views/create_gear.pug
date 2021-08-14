@@ -3,17 +3,17 @@ extend layout
 block content
 
   h2= title
-  form(action='' method='POST')
-    label( for='brand') Brand:
-    input( name='brand' value=inputs ? inputs.brand:'' )
-    label( for='model') Model:
-    input( name='model' value=inputs ? inputs.model:'')
-    label( for='speeds') Speeds:
-    input( name='speeds' value=inputs ? inputs.speeds:'')
-    button( type='submit') Submit
-  
   if !!errors
-    ul Errors
-      each error in errors
-        li #{error.msg}
-    
+    div( class="alert alert-dark" role="alert")
+       ul
+        each error in errors
+          li #{error.msg}
+  div(class="mb-3" style={width:'30%'})
+    form(action='' method='POST')
+      label( for='brand' class="form-label") Brand:
+      input( name='brand' class="form-control" value=inputs ? inputs.brand:'' )
+      label( for='model' class="form-label") Model:
+      input( name='model' class="form-control" value=inputs ? inputs.model:'')
+      label( for='speeds' class="form-label") Speeds:
+      input( name='speeds' class="form-control" value=inputs ? inputs.speeds:'')
+      button( class='btn btn-primary btn-sm' style={margin:'20px 0 0 0'} type='submit') Submit

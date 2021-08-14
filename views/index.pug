@@ -1,34 +1,31 @@
 extends layout
 
 block content
-  h4= title
+  h4(style={ 'padding':'20px 0 20px 20px'}) #{title}
 
-  aside
-   ul
-    li Categories
-      ul
-        li Bikes
-          ul
-            li 
-              a(href="catalog/bikes/mountain") Mountain
-            li 
-              a(href="catalog/bikes/road") Road
-        li Components
-          ul
-            li 
-              a(href="catalog/components/suspensions") Suspensions
-            li 
-               a(href="catalog/components/gears") Gears
-            li 
-              a(href="catalog/components/wheels") Wheels
-      li Create
-        ul
-          li 
+  aside(style={ width:'30%', 'padding':'20px','font-family': 'Cutive Mono, monospace'})
+      div Bikes
+        ul(class="list-group")
+          li(class="list-group-item")
+            a(href="catalog/bikes/mountain" style={ 'font-family': 'Cutive Mono, monospace'}) Mountain
+          li(class="list-group-item")
+            a(href="catalog/bikes/road") Road
+      div Components
+        ul(class="list-group")
+          li(class="list-group-item")
+            a(href="catalog/components/suspensions") Suspensions
+          li(class="list-group-item") 
+              a(href="catalog/components/gears") Gears
+          li(class="list-group-item") 
+            a(href="catalog/components/wheels") Wheels
+      hr
+      div Create new elements
+        ul(class="list-group")
+          li(class="list-group-item") 
             a(href="catalog/bike/create") Bike
-          li 
+          li(class="list-group-item") 
             a(href="catalog/components/suspension/create") Suspension
-          li 
+          li(class="list-group-item")
             a(href="catalog/components/gear/create") Gear
-          li 
+          li(class="list-group-item")
             a(href="catalog/components/wheel/create") Wheel
-   

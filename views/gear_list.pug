@@ -3,8 +3,21 @@ extend layout
 block content
 
   h2= title
-
-  ul
+  if !!bikes
+    div( class="alert alert-dark" role="alert")
+      ul
+        p You can't delete this gear, it's in use by the following bikes:
+        each bike in bikes
+          li #{bike.brand} #{bike.model}
+  ul(class="list-group list-group-flush")
     each gear in gear_list
-      li #{gear.brand + ' ' + gear.model} #{gear.speeds} speeds
-      
+      div(class='container')
+        li(class="list-group-item ")   
+          div(class='d-flex flex-nowrap justify-content-between align-items-center')
+            div #{gear.brand + ' ' + gear.model} #{gear.speeds} speeds 
+            div
+              div(class='d-flex flex-nowrap')
+                form(method='GET' action=`/catalog/components/gears/${gear._id}/update`)
+                  button(class='btn btn-primary btn-sm' type='submit' ) Edit
+                form( method='POST' action=`/catalog/components/gears/${gear._id}/delete`)
+                  button(type='submit' class='btn btn-danger btn-sm sm' style={ margin:'0 0 0 3px'}) Delete

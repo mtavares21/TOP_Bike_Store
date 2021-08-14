@@ -1,14 +1,22 @@
 extend layout
 
 block content
-
   h2= title
-
-  ul
+  if !!bikesWithWheel
+    div( class="alert alert-dark" role="alert")
+      p You can't delete this wheel, it's in use by the following bikes:
+        ul
+          each bike in bikesWithWheel
+            li=bike.brand + ' ' + bike.model
+  ul(class="list-group list-group-flush")
     each wheel in wheel_list
-      li #{wheel.brand + ' ' + wheel.model}
-        dl
-          dt Size:
-          dd #{wheel.size}
-          dt Width:
-          dd #{wheel.width}
+      div(class='container')
+        li(class="list-group-item ") 
+          div(class='d-flex flex-nowrap justify-content-between align-items-center')
+            div #{wheel.brand + ' ' + wheel.model} - Size: #{wheel.size} Width: #{wheel.width}
+            div
+              div(class='d-flex flex-nowrap')
+                form(method='GET' action=`/catalog/components/wheels/${wheel._id}/update`)
+                  button(class='btn btn-primary btn-sm' type='submit' ) Edit
+                form( method='POST' action=`/catalog/components/wheels/${wheel._id}/delete`)
+                  button(type='submit' class='btn btn-danger btn-sm sm' style={ margin:'0 0 0 3px'}) Delete

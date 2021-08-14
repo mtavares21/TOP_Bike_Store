@@ -2,6 +2,8 @@ const async = require('async');
 const mongoose = require("mongoose");
 const { body, validationResult } = require("express-validator");
 const Gear = require('../models/gear')
+const Bike = require('../models/bike')
+const debug = require('debug')('gear_ctrl')
 // READ
 exports.get_list = function(req, res){
   Gear.find({}).exec(function (err,results) {
@@ -70,8 +72,40 @@ exports.get_delete = function (req, res) {
   res.send('get_delete')
 }
 
-exports.post_delete= function (req, res) {
-  res.send('post_delete')
+exports.post_delete = function (req, res) {
+  async.parallel({
+  gear: function(callback){
+    Gear.findById(req.params.id).exec(callback)
+  },
+  gears: function(callback){
+    Gear.find({}).exec(callback)
+  },
+  bikes: function(callback) {
+    Bike.find({'gear':req.params.id}).exec(callback)
+  }
+  },
+  function (err, results) {
+    debug('delete gear:' + results)
+    if(err){ 
+      return next(error)
+    } else if( !!results.gear && !!results.gear.length){ // Gear not found
+        return new Error('Suspension not found!')
+    } else if( !!results.bikes.length ){ // Bikes using this gear
+        res.render('gear_list', {
+          title: 'Gears',
+          gear_list: results.gears,
+          bikes: results.bikes
+        })
+    } else { // Suspension not in use
+      Gear.findByIdAndRemove(req.params.id, (err)=> {
+        if(err){ 
+          next(err)
+          res.send('Failed to delete gear!')
+        }
+        res.redirect('/catalog/components/gears')
+      })
+    }
+  })
 }
 
 // UPDATE

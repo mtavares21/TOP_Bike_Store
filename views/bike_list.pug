@@ -3,16 +3,42 @@ extend layout
 block content
 
   h2=title
-
-  ul
-    each bike in bike_list
-      li
-        h5 #{bike.brand}  #{bike.model}
-        dl 
-          dt #{!!bike.suspension_front || !!bike.suspension_rear ? 'Suspension:':null}
-            dd #{!!bike.suspension_front? 'Front: ' + bike.suspension_front.brand + ' ' + bike.suspension_front.model + bike.suspension_front.travel: null}
-            dd #{!!bike.suspension_rear? 'Rear: ' + bike.suspension_rear.brand + ' ' + bike.suspension_rear.model + bike.suspension_rear.travel: null}
-          dt Gear:
-          dd #{bike.gear.brand} #{bike.gear.model} #{bike.gear.speeds}speeds
-          dt Wheels:
-          dd #{bike.wheels.brand} #{bike.wheels.model} #{bike.wheels.size}in
+  if !!error
+    div( class="alert alert-dark" role="alert") #{error}
+  each bike in bike_list
+    div(class="card" style={ margin:'30px 0 30px 0'})
+      div(class="card-body")
+        h5(class="card-title") #{bike.brand}  #{bike.model}
+        div(class="card-text")
+          dl(class='row')
+            dt(class="col-sm-2") #{!!bike.suspension_front || !!bike.suspension_rear ? 'Suspension(s):':null}
+            dd(class="col-sm-9") #{!!bike.suspension_front? bike.suspension_front.brand + ' ' + bike.suspension_front.model + bike.suspension_front.travel + ' ' +'(front)' : null}
+            if !!bike.suspension_rear
+              dt(class="col-sm-2")
+              dd(class="col-sm-9")  #{bike.suspension_rear.brand + ' ' + bike.suspension_rear.model + bike.suspension_rear.travel + ' ' +'(rear)'}
+            dt(class="col-sm-2") Gear:
+            dd(class="col-sm-9") #{!!bike.gear ? bike.gear.brand + ' ' + bike.gear.model + ' ' + bike.gear.speeds + 'speeds': null}
+            dt(class="col-sm-2") Wheels:
+            dd(class="col-sm-9") #{bike.wheels.brand} #{bike.wheels.model} #{bike.wheels.size}in
+        div
+            div(class='d-flex flex-nowrap' )
+              div(class='row')
+                div(class='col-2')
+                  form(method='GET' action=`/catalog/bikes/${bike.bike_category.name}/${bike._id}/update`)
+                    button(class='btn btn-primary btn-sm' type='submit' ) Edit
+                div(class='col-6')
+                  form(method='POST' action=`/catalog/bikes/${bike.bike_category.name}/${bike._id}/delete`)
+                    div(class='d-flex flex-nowrap')
+                        div(class='col')
+                          button( id='passToggle' type='submit' class='btn btn-danger btn-sm sm' style={ margin:'0 0 0 3px'}) Delete
+                        div(class='col-sm-auto ')
+                          input(name='password' type="password" class="form-control form-control-sm text-center" placeholder='Admin. Password')
+                      
+  script.
+    const toggle = document.getElementById('passToggle')
+    const input = document.getElementById('passInput')
+    toogle.addEventListener( 'click', () => {
+      input.style.visibility = 'visible'
+      toggle.style.visibility = 'hidden'
+      }
+    )

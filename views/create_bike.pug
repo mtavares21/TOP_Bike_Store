@@ -3,47 +3,48 @@ extend layout
 block content
 
   h2= title
-  form(action='' method='POST')
-    label( for='brand') Brand:
-    input( name='brand' value= inputs ? inputs.brand:'' )
-    
-    label( for='model') Model:
-    input( name='model' value=inputs ? inputs.model:'')
-
-    label(for='bike_category') Bike Category:
-    select#bike_category(name='bike_category')
-      option( value= inputs ?inputs.bike_category._id : null) #{inputs.bike_category ? inputs.bike_category.name : null}
-      each cat in bike_category
-        option(value=cat._id) #{cat.name}
-    
-    label(for='wheels') Wheels:
-    select#wheels(name='wheels')
-      option( value= inputs.wheels ? inputs.wheels : null) #{inputs.wheels ? inputs.wheels.brand + ' ' + inputs.wheels.model + ' ' + inputs.wheels.size : null}
-      each wheel in wheels
-        option(value=wheel._id) #{wheel.brand + ' ' + wheel.model + ' ' + wheel.size}
-    
-    label(for='suspension_front') Front suspension:    
-    select#suspension_front(name='suspension_front')
-      option( value=inputs.suspension_front ? inputs.suspension_front._id : null) #{inputs.suspension_front? inputs.suspension_front.brand + ' ' + inputs.suspension_front.model + ' ' + inputs.suspension_front.travel : null}
-      each sus in suspensions_front
-        option(value=sus._id) #{sus.brand + ' ' + sus.model + ' ' + sus.travel}
-    
-    label(for='suspension_rear') Rear suspension:    
-    select#suspension_rear(name='suspension_rear')
-      option( value= inputs.suspension_rear? inputs.suspension_rear._id : null) #{inputs.suspension_rear ? inputs.suspension_rear.brand + ' ' + inputs.suspension_rear.model + ' ' + inputs.suspension_rear.travel: null}
-      each sus in suspensions_rear
-        option(value=sus._id) #{sus.brand + ' ' + sus.model + ' ' + sus.travel}
-    
-    label(for='gear') Gears:
-    select#gears(name='gears')
-      option( value=inputs.gear ? inputs.gear._id: null) #{inputs.gear ?  inputs.gear.brand + ' ' + inputs.gear.model + ' ' + inputs.gear.speeds : null}
-      each gear in gears
-        option(value=gear._id) #{ gear.brand + ' ' + gear.model + ' ' + gear.speeds}
-    
-    button( type='submit') Submit
-  
   if !!errors
-    ul Errors
-      each error in errors
-        li #{error.msg}
-    
+    div( class="alert alert-dark" role="alert")
+       ul
+        each error in errors
+          li #{error.msg}
+  div(class="mb-3" style={width:'30%'})
+    form(action='' method='POST')
+      label( for='brand' class="form-label") Brand:
+      input( name='brand' value=inputs.brand class="form-control")
+      
+      label( for='model' class="form-label") Model:
+      input( name='model' value=inputs.model class="form-control")
+
+      label(for='bike_category' class="form-label") Bike Category:
+      select#bike_category(name='bike_category' class="form-select")
+        option( value=null ) 
+        each cat in bike_category
+          option( value=cat._id selected=cat.selected ) #{cat.name}
+      
+      label(for='wheels' class="form-label") Wheels:
+      select#wheels(name='wheels' class="form-select" )
+        option( value=null )
+        each wheel in wheels
+          option( value=wheel._id selected= wheel.selected ) #{wheel.brand + ' ' + wheel.model + ' ' + wheel.size}
+      
+      label(for='suspension_front' class="form-label") Front suspension:    
+      select#suspension_front(name='suspension_front' class="form-select")
+        option( value=null )
+        each sus in suspensions_front
+          option( value=sus._id selected=sus.selected ) #{sus.brand + ' ' + sus.model + ' ' + sus.travel}
+      
+      label(for='suspension_rear' class="form-label") Rear suspension:    
+      select#suspension_rear(name='suspension_rear' class="form-select")
+        option( value=null )
+        each sus in suspensions_rear
+          option( value=sus._id selected=sus.selected ) #{sus.brand + ' ' + sus.model + ' ' + sus.travel}
+      
+      label(for='gear' class="form-label") Gears:
+      select#gears(name='gears' class="form-select form-select")
+        option( value=null )
+        each gear in gears
+          option( value=gear._id selected=gear.selected ) #{ gear.brand + ' ' + gear.model + ' ' + gear.speeds}
+      
+      button( type='submit' class='btn btn-primary btn-sm' style={margin:'20px 0 0 0'}) Submit
+        

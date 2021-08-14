@@ -17,7 +17,7 @@ const Wheel = require('./models/wheels')
 const Gear = require('./models/gear')
 
 const mongoose = require('mongoose');
-const mongoDB = 'mongodb+srv://mtavares21:rm33FaTFsS2!FAn@cluster0.ksmxt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const mongoDB = process.env.MONGOURL_DEV
 mongoose.connect(mongoDB, {useNewUrlParser: true, useUnifiedTopology: true});
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;

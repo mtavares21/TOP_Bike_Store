@@ -2,6 +2,7 @@ const async = require('async');
 const mongoose = require("mongoose");
 const { body, validationResult } = require("express-validator");
 const Suspension = require('../models/suspension')
+const Bike = require('../models/bike')
 const debug = require('debug')('suspension_ctrl')
 
 // READ
@@ -56,7 +57,7 @@ exports.post_create = [
       const suspension = new Suspension({
         brand: req.body.brand,
         model: req.body.model,
-        tavel: req.body.travel,
+        travel: req.body.travel,
         position: req.body.position,
         comp_cat: '61040840cfa66a21187c8830',
         category:'6104083fcfa66a21187c8825'
@@ -76,8 +77,40 @@ exports.get_delete = function (req, res) {
 }
 
 exports.post_delete= function (req, res) {
-  res.send('post_delete')
+  async.parallel({
+    suspension: function (callback) {
+      Suspension.findById(req.params.id).exec(callback)
+    },
+    bikesWithFrontSuspension: function (callback) {
+      Bike.find({'suspension_front': req.params.id}).exec(callback)
+    },
+    bikesWithRearSuspension: function (callback) {
+      Bike.find({'suspension_rear': req.params.id}).exec(callback)
+    },
+    suspensions: function (callback) {
+      Suspension.find({}).exec(callback)
+    }
+  },
+   function (err, results) {
+    const bikesWithSuspension = results.bikesWithFrontSuspension.concat(results.bikesWithRearSuspension)
+    debug( bikesWithSuspension)
+    if(err){ 
+      return next(error)
+    } else if(!!results.suspension.length){
+        return new Error('Suspension not found!')
+    } else if(!!bikesWithSuspension.length) {
+        res.render('suspension_list',{title: 'Suspensions', sus_list: results.suspensions, bikesWithSuspension})
+    } else Suspension.findByIdAndRemove(result._id, (err)=> {
+      if(err){ 
+        next(err)
+        res.send('Failed to delete wheel!')
+      }
+      res.redirect('/catalog/components/suspensions')
+    })
+  }
+  )
 }
+
 
 // UPDATE
 exports.get_update = function (req, res) {

@@ -8,6 +8,7 @@ const BikeCategory = require('../models/bike_category')
 const Gear = require('../models/gear')
 const Suspension = require('../models/suspension')
 const Wheel = require('../models/wheels')
+const ADMIN_PASS = process.env.ADMIN_PASS
 // GET bike categories
 exports.get_list = function (req, res, next) {
   const cat = req.params.catName
@@ -30,6 +31,7 @@ exports.get_list = function (req, res, next) {
       .populate('suspension_rear')
       .populate('gear')
       .populate('wheels')
+      .populate('bike_category')
       .exec(function (err, list) {
         if (err) {
           return next(err);
@@ -55,16 +57,6 @@ exports.get_item = function(req, res) {
             /* CREATE BIKE */ 
 // GET 
 exports.get_create = function (req, res){
-     const inputs = {
-      brand: req.body.brand,
-      model: req.body.model,
-      wheels: req.body.wheels,
-      suspension_front: req.body.suspension_front,
-      suspension_rear: req.body.suspension_rear,
-      gear: req.body.gear,
-      bike_category: req.body.bike_category,
-      category: '61040840cfa66a21187c8828'
-    }
   async.parallel({
     wheels: function (callback){
       Wheel.find(callback)
@@ -83,6 +75,12 @@ exports.get_create = function (req, res){
     }
   },
   function(err, results){
+    // Show user input's after submit
+    const inputs = {
+      brand: '',
+      model: '',
+    }
+
     if(err){ next(err)}
     else res.render('create_bike', {
       title: 'Create Bike',
@@ -95,11 +93,9 @@ exports.get_create = function (req, res){
     })
   }
   )
-  //res.render('bike_create', {title:'Create Bike'})
 } 
 
 //POST
-let inputs = {}
 exports.post_create = [
   // Validade and sanitize request
   body('brand', ' Brand must not be empty')
@@ -124,21 +120,12 @@ exports.post_create = [
   //Evaluate request
   function(req, res, next){ 
     const errors = validationResult(req)
-    inputs = {
-      brand: req.body.brand,
-      model: req.body.model,
-      wheels: req.body.wheels,
-      suspension_front: req.body.suspension_front,
-      suspension_rear: req.body.suspension_rear,
-      gear: req.body.gear,
-      bike_category: req.body.bike_category,
-      category: '61040840cfa66a21187c8828'
-    }
+    
     // Resolve request
     if(!errors.isEmpty()){
       async.parallel({
     wheels: function (callback){
-      Wheel.find(callback)
+      Wheel.find({}).exec(callback)
     },
     suspension_front:function (callback){
       Suspension.find({'position': 'front'}).exec(callback)
@@ -147,23 +134,44 @@ exports.post_create = [
       Suspension.find({'position':'rear'}).exec(callback)
     },
     gear:function (callback){
-      Gear.find(callback)
+      Gear.find({}).exec(callback)
     },
     bike_category:function (callback){
-      BikeCategory.find(callback)
-    }
+      BikeCategory.find({}).exec(callback)
+    },
+    
   },
   function(err, results){
-    if(err){ return next(err)}
+    if(err){ 
+      return next(err)
+    }
+    // Show user input's after submit
+    const inputs = {
+      brand: req.body.brand || '',
+      model: req.body.model || '',
+    }
+    // Given a input list returns choosen item or null
+    function isSelectedItem (group, itemId){
+      const groupWithSelectProp = group.map( item =>{
+        if(item._id == itemId){
+          item.selected = 'selected'
+        } else item.selected = false
+      return item
+      })
+      debug('selected item:' + groupWithSelectProp)
+    return groupWithSelectProp
+    }
+
+    debug('inputs:'+JSON.stringify(inputs))
     res.render('create_bike', {
       title: 'Create Bike',
-      wheels: results.wheels, 
-      suspensions_front: results.suspension_front,
-      suspensions_rear: results.suspension_rear,
-      gears: results.gear,
-      bike_category: results.bike_category,
-      inputs,
+      wheels: isSelectedItem(results.wheels, req.body.wheels) , 
+      suspensions_front: isSelectedItem(results.suspension_front, req.body.suspension_front),
+      suspensions_rear: isSelectedItem( results.suspension_rear, req.body.suspension_rear) ,
+      gears: isSelectedItem( results.gear,req.body.gears),
+      bike_category: isSelectedItem(results.bike_category, req.body.bike_category),
       errors:errors.array(),
+      inputs,
     })
   })
     }
@@ -172,18 +180,17 @@ exports.post_create = [
         brand: req.body.brand,
         model: req.body.model,
         wheels: req.body.wheels,
-        suspension_front: req.body.suspension_front,
-        suspension_rear: req.body.suspension_rear,
-        gear: req.body.gear,
+        suspension_front: req.body.suspension_front || null,
+        suspension_rear: req.body.suspension_rear || null,
+        gear: req.body.gears || null,
         bike_category: req.body.bike_category,
         category:'61040840cfa66a21187c8828',
       })
       debug('New bike: '+ bike)
-      res.redirect('/catalog')
-      /*suspension.save( function (err) {
+      bike.save( function (err) {
         if (err) { next(err)}
-        else { res.redirect('/catalog')}
-      })*/
+        else res.redirect('/catalog')
+      })
     }
   }
 ]
@@ -195,8 +202,50 @@ exports.get_delete = function (req, res){
 }
 
 // POST
-exports.post_delete = function (req, res){
-  res.send('NOT IMPLEMENTED: post delete bike ');
+exports.post_delete = async function (req, res, next){
+    const cat = req.params.catName
+    async.waterfall([
+        function(callback){
+          BikeCategory
+            .find({'name':cat})
+            .exec(function(err, category) {
+              if(err) { 
+                return next(err)
+              }
+              callback(null, category)
+              
+          })
+        },
+        function (category, callback){
+          Bike
+          .find({'bike_category':category})
+          .populate('suspension_front')
+          .populate('suspension_rear')
+          .populate('gear')
+          .populate('wheels')
+          .populate('bike_category')
+          .exec(function (err, list) {
+            if (err) {
+              return next(err);
+            }
+            callback(null, list)
+        });
+        }
+      ],
+      function (err, results){
+        if(err){
+          return next(err)
+        } else if( req.body.password === ADMIN_PASS){
+          Bike.findByIdAndRemove(req.params.id, function (err, result){ 
+          if(err){
+            return next(err)
+          }
+          res.redirect(`/catalog/bikes/${cat}`)
+          })
+          } else { 
+            res.render('bike_list',{ bike_list:results, error: 'You must provide the correct password.' })
+          }
+      })
 }
 
             /* UPDATE BIKE */

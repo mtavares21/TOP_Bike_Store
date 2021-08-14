@@ -11,7 +11,8 @@ const app = express()
 
 // Set up mongoose connection
 const mongoose = require('mongoose')
-const mongoDB = 'mongodb+srv://mtavares21:rm33FaTFsS2!FAn@cluster0.ksmxt.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const mongoDB = process.env.MONGOURL_DEV
+debug(mongoDB)
 mongoose.connect(mongoDB, { useNewUrlParser: true, useUnifiedTopology: true })
 const db = mongoose.connection
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))

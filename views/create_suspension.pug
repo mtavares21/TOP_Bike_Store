@@ -3,23 +3,23 @@ extend layout
 block content
 
   h2= title
-  form(action='' method='POST')
-    label( for='brand') Brand:
-    input( name='brand' value=inputs ? inputs.brand:'' )
-    label( for='model') Model:
-    input( name='model' value=inputs ? inputs.model:'')
-    label( for='travel') Travel:
-    input( name='travel' value=inputs ? inputs.size:'')
-    label( for='position' style={width:'100%'}) Position:
-    div#position
-      input#front(type='radio' name='position' value='front' checked='')
-      label(for='front') Front
-      input#rear(type='radio' name='position' value='rear')
-      label(for='Rear') Rear
-    button( type='submit') Submit
-  
   if !!errors
-    ul Errors
-      each error in errors
-        li #{error.msg}
-    
+    div( class="alert alert-dark" role="alert")
+       ul
+        each error in errors
+          li #{error.msg}
+  div(class="mb-3" style={width:'30%'})
+    form(action='' method='POST')
+      label( for='brand' class="form-label") Brand:
+      input( name='brand' class="form-control" value=inputs ? inputs.brand:'' )
+      label( for='model' class="form-label") Model:
+      input( name='model'  class="form-control" value=inputs ? inputs.model:'')
+      label( for='travel' class="form-label") Travel:
+      input( name='travel' class="form-control" style={width:'20%'} value=inputs ? inputs.travel:'')
+      label( for='position' class="form-label" style={width:'100%'}) Position:
+      div#position
+        input#front(type='radio' class="form-check-input" name='position' value='front' checked='')
+        label(for='front' class="form-check-label") Front
+        input#rear(type='radio' class="form-check-input" name='position' value='rear')
+        label(for='Rear' class="form-check-label") Rear
+      button( class='btn btn-primary btn-sm' type='submit' style={margin:'20px 0 0 0'}) Submit

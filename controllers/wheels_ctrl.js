@@ -1,8 +1,9 @@
 const async = require('async');
 const mongoose = require("mongoose");
 const { body, validationResult } = require("express-validator");
-
+const debug = require('debug')('wheels_ctrl')
 const Wheel = require('../models/wheels');
+const Bike = require('../models/bike')
 
 // READ
 exports.get_list = function(req, res){
@@ -86,7 +87,37 @@ exports.get_delete = function (req, res) {
 }
 
 exports.post_delete= function (req, res) {
-  res.send('post_delete')
+  async.parallel({
+    wheel: function (callback) {
+     Wheel.findById(req.params.id).exec(callback)
+    },
+    bikesWithWheel: function (callback){
+     Bike.find({'wheels': req.params.id}).exec(callback)
+    },
+    wheels: function (callback){
+      Wheel.find({}).exec(callback)
+    }
+  },
+    function (err, results) {
+      debug('Delete wheel:'+ results)
+      if(err){ 
+        return next(error)
+      } else if(!!results.wheel.length){
+          return new Error('Wheel not found!')
+      } else if ( !!results.bikesWithWheel.length){
+          res.render( 'wheel_list',  { 
+            title: 'Wheels',
+            wheel_list: results.wheels,
+            bikesWithWheel: results.bikesWithWheel
+            }
+          )
+      } else Wheel.findByIdAndRemove(req.params.id, (err)=> {
+        if(err){ 
+          next(err)
+          res.send('Failed to delete wheel!')
+        } else res.redirect('/catalog/components/wheels')
+      })
+  })
 }
 
 // UPDATE
