@@ -1,16 +1,20 @@
 extends layout
 
 block content
-  h4(style={ 'padding':'20px 0 20px 20px'}) #{title}
+  h4(style={ 'padding':'20px 0 0 20px', 'font-family': 'Roboto, monospace', 'font-width':'800px'}) 
+    strong 
+      u #{title}
 
-  aside(style={ width:'30%', 'padding':'20px','font-family': 'Cutive Mono, monospace'})
-      div Bikes
+  aside(style={ width:'30%', 'padding':'20px','font-family': 'Roboto, monospace'})
+      div 
+        strong Bikes
         ul(class="list-group")
           li(class="list-group-item")
-            a(href="catalog/bikes/mountain" style={ 'font-family': 'Cutive Mono, monospace'}) Mountain
+            a(href="catalog/bikes/mountain") Mountain
           li(class="list-group-item")
             a(href="catalog/bikes/road") Road
-      div Components
+      div 
+        strong Components
         ul(class="list-group")
           li(class="list-group-item")
             a(href="catalog/components/suspensions") Suspensions
@@ -18,8 +22,9 @@ block content
               a(href="catalog/components/gears") Gears
           li(class="list-group-item") 
             a(href="catalog/components/wheels") Wheels
-      hr
-      div Create new elements
+      hr(style= {margin:'25px 0 15px 0'})
+      div 
+        strong Create new elements
         ul(class="list-group")
           li(class="list-group-item") 
             a(href="catalog/bike/create") Bike

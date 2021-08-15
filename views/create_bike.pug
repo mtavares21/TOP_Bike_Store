@@ -2,13 +2,13 @@ extend layout
 
 block content
 
-  h2= title
+  h2(style={padding:'20px 20px'})= title
   if !!errors
     div( class="alert alert-dark" role="alert")
        ul
         each error in errors
           li #{error.msg}
-  div(class="mb-3" style={width:'30%'})
+  div(class="mb-3" style={width:'30%', margin:'0 0 0 20px'})
     form(action='' method='POST')
       label( for='brand' class="form-label") Brand:
       input( name='brand' value=inputs.brand class="form-control")

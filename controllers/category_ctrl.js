@@ -13,7 +13,7 @@ exports.get_list = function(req, res){
         return next(err);
       }
       res.render("index", {
-        title: "Main categories",
+        title: "Index",
         category_list: list,
       });
     });

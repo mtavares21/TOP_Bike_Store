@@ -35,10 +35,10 @@ router.get('/bikes/:catName/:id/delete', bike_ctrl.get_delete)
 router.post('/bikes/:catName/:id/delete', bike_ctrl.post_delete)
 
 // GET request to update bike.
-router.get('/bike/:id/update', bike_ctrl.get_update)
+router.get('/bikes/:catName/:id/update', bike_ctrl.get_update)
 
 // POST request to update bike.
-router.post('/bike/:id/update', bike_ctrl.post_update)
+router.post('/bikes/:catName/:id/update', bike_ctrl.post_update)
 
 // GET bike
 router.get('/bikes/:catName/:id/', bike_ctrl.get_item)
@@ -117,9 +117,9 @@ router.post('/components/gears/:id/delete', gear_ctrl.post_delete)
 
 // UPDATE
 // GET
-router.get('./components/gears/:id/update', gear_ctrl.get_update)
+router.get('/components/gears/:id/update', gear_ctrl.get_update)
 //POST
-router.post('./components/gears/:id/update', gear_ctrl.post_update)
+router.post('/components/gears/:id/update', gear_ctrl.post_update)
 
 // READ
 // GET

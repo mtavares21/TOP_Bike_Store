@@ -2,11 +2,11 @@ extend layout
 
 block content
 
-  h2=title
+  h2(class='title', style={padding:'20px 20px', 'font-family': 'Roboto, monospace', 'font-width':'800px'})=title
   if !!error
     div( class="alert alert-dark" role="alert") #{error}
   each bike in bike_list
-    div(class="card" style={ margin:'30px 0 30px 0'})
+    div(class="card" style={ width:'90%', margin:'1% 0 1% 5%', 'font-family': 'Roboto, monospace', 'font-width':'800px'})
       div(class="card-body")
         h5(class="card-title") #{bike.brand}  #{bike.model}
         div(class="card-text")
@@ -30,15 +30,8 @@ block content
                   form(method='POST' action=`/catalog/bikes/${bike.bike_category.name}/${bike._id}/delete`)
                     div(class='d-flex flex-nowrap')
                         div(class='col')
-                          button( id='passToggle' type='submit' class='btn btn-danger btn-sm sm' style={ margin:'0 0 0 3px'}) Delete
+                          button( type='submit' class='btn btn-danger btn-sm sm' style={ margin:'0 0 0 3px'}) Delete
                         div(class='col-sm-auto ')
                           input(name='password' type="password" class="form-control form-control-sm text-center" placeholder='Admin. Password')
                       
-  script.
-    const toggle = document.getElementById('passToggle')
-    const input = document.getElementById('passInput')
-    toogle.addEventListener( 'click', () => {
-      input.style.visibility = 'visible'
-      toggle.style.visibility = 'hidden'
-      }
-    )
+  

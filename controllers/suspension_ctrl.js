@@ -103,7 +103,7 @@ exports.post_delete= function (req, res) {
     } else Suspension.findByIdAndRemove(result._id, (err)=> {
       if(err){ 
         next(err)
-        res.send('Failed to delete wheel!')
+        res.send('Failed to delete Suspension!')
       }
       res.redirect('/catalog/components/suspensions')
     })
@@ -113,10 +113,33 @@ exports.post_delete= function (req, res) {
 
 
 // UPDATE
-exports.get_update = function (req, res) {
-  res.send('get_update')
+exports.get_update = function (req, res, next) {
+  Suspension.findById(req.params.id).exec(callback)
+  function callback(err, result){
+    if(err){ return next(err) }
+    // Render 'create_Suspension' with pre-filled form
+    res.render('create_suspension', {
+      title: 'Update Suspension', 
+      inputs: result
+    })
+  }
 }
 
-exports.post_update= function (req, res) {
-  res.send('post_update')
+
+exports.post_update= function (req, res, next) {
+  Suspension.findById(req.params.id).exec(
+  function (err, result) {
+    if(err) { 
+      next(err)
+      res.render( 'create_suspension', {title: 'Update Suspension', inputs: result, errors:err} )
+    }
+    if(!!result) {
+      debug(req.body)
+      Suspension.findByIdAndUpdate(req.params.id, req.body , {},
+      function(err, result){
+        if (err) { return next(err) }
+        else res.redirect('/catalog/components/Suspensions')
+      })
+    } else res.render( 'create_Suspension', {title: 'Update Suspension', inputs: result, errors:[ {msg:'Failed to update'}] })
+  })
 }

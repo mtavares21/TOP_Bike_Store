@@ -2,13 +2,13 @@ extend layout
 
 block content
 
-  h2= title
+  h2(style={padding:'20px 20px'})= title
   if !!errors
     div( class="alert alert-dark" role="alert")
        ul
         each error in errors
           li #{error.msg}
-  div(class="mb-3" style={width:'30%'})
+  div(class="mb-3" style={width:'30%', margin:'0 0 0 20px'})
     form(action='' method='POST')
       label( for='brand' class="form-label") Brand:
       input( name='brand' class="form-control" value=inputs ? inputs.brand:'' )
@@ -18,8 +18,8 @@ block content
       input( name='travel' class="form-control" style={width:'20%'} value=inputs ? inputs.travel:'')
       label( for='position' class="form-label" style={width:'100%'}) Position:
       div#position
-        input#front(type='radio' class="form-check-input" name='position' value='front' checked='')
+        input#front(type='radio' class="form-check-input" name='position' value='front' checked = inputs.position === 'front')
         label(for='front' class="form-check-label") Front
-        input#rear(type='radio' class="form-check-input" name='position' value='rear')
+        input#rear(type='radio' class="form-check-input" name='position' value='rear' checked = inputs.position === 'rear')
         label(for='Rear' class="form-check-label") Rear
       button( class='btn btn-primary btn-sm' type='submit' style={margin:'20px 0 0 0'}) Submit

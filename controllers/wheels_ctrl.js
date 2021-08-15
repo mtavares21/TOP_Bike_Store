@@ -121,10 +121,32 @@ exports.post_delete= function (req, res) {
 }
 
 // UPDATE
-exports.get_update = function (req, res) {
-  res.send('get_update')
+exports.get_update = function (req, res, next) {
+  Wheel.findById(req.params.id).exec(callback)
+  function callback(err, result){
+    if(err){ return next(err) }
+    // Render 'create_wheel' with pre-filled form
+    res.render('create_wheel', {
+      title: 'Update Wheel', 
+      inputs: result
+    })
+  }
 }
 
-exports.post_update= function (req, res) {
-  res.send('post_update')
+exports.post_update= function (req, res, next) {
+  Wheel.findById(req.params.id).exec(
+  function (err, result) {
+    if(err) { 
+      next(err)
+      res.render( 'create_wheel', {title: 'Update Wheel', inputs: result, errors:err} )
+    }
+    if(!!result) {
+      debug(req.body)
+      Wheel.findByIdAndUpdate(req.params.id, req.body , {},
+      function(err, result){
+        if (err) { return next(err) }
+        else res.redirect('/catalog/components/wheels')
+      })
+    } else res.render( 'create_wheel', {title: 'Update     Wheel', inputs: result, errors:[ {msg:'Failed to update'}] })
+  })
 }

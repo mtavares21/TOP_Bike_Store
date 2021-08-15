@@ -9,6 +9,19 @@ const Gear = require('../models/gear')
 const Suspension = require('../models/suspension')
 const Wheel = require('../models/wheels')
 const ADMIN_PASS = process.env.ADMIN_PASS
+
+// Helper function
+// Given a input list returns choosen item or null
+    function isSelectedItem (group, itemId){
+      const groupWithSelectedProp = group.map( item =>{
+        if((item._id+'') == (itemId+'')){
+          item.selected = 'selected'
+        } else item.selected = null
+      return item
+      })
+    return groupWithSelectedProp
+    }
+
 // GET bike categories
 exports.get_list = function (req, res, next) {
   const cat = req.params.catName
@@ -41,8 +54,12 @@ exports.get_list = function (req, res, next) {
     }
   ],
   function(err, list){
+    const catFormat = cat
+      .split('')
+      .map((l,i)=> i===0 ? l.toUpperCase():l)
+      .join('')
     res.render("bike_list", {
-          title: "Bikes",
+          title: catFormat + ' ' + "Bikes",
           bike_list: list,
       }
     )
@@ -93,7 +110,7 @@ exports.get_create = function (req, res){
     })
   }
   )
-} 
+}
 
 //POST
 exports.post_create = [
@@ -150,19 +167,6 @@ exports.post_create = [
       brand: req.body.brand || '',
       model: req.body.model || '',
     }
-    // Given a input list returns choosen item or null
-    function isSelectedItem (group, itemId){
-      const groupWithSelectProp = group.map( item =>{
-        if(item._id == itemId){
-          item.selected = 'selected'
-        } else item.selected = false
-      return item
-      })
-      debug('selected item:' + groupWithSelectProp)
-    return groupWithSelectProp
-    }
-
-    debug('inputs:'+JSON.stringify(inputs))
     res.render('create_bike', {
       title: 'Create Bike',
       wheels: isSelectedItem(results.wheels, req.body.wheels) , 
@@ -186,7 +190,6 @@ exports.post_create = [
         bike_category: req.body.bike_category,
         category:'61040840cfa66a21187c8828',
       })
-      debug('New bike: '+ bike)
       bike.save( function (err) {
         if (err) { next(err)}
         else res.redirect('/catalog')
@@ -250,10 +253,79 @@ exports.post_delete = async function (req, res, next){
 
             /* UPDATE BIKE */
 //GET
-exports.get_update = function (req, res){
-  res.send('NOT IMPLEMENTED: get update bike ');
+exports.get_update = function (req, res, next) {
+  const cat = req.params.catName
+  async.parallel({
+    wheels: function (callback){
+      Wheel.find({}).lean().exec(callback)
+    },
+    suspension_front:function (callback){
+      Suspension.find({'position': 'front'}).lean().exec(callback)
+    },
+    suspension_rear:function (callback){
+      Suspension.find({'position':'rear'}).lean().exec(callback)
+    },
+    gear:function (callback){
+      Gear.find({}).lean().exec(callback)
+    },
+    bike_category:function (callback){
+      BikeCategory.find({}).lean().exec(callback)
+    },
+    bike: function (callback){
+        Bike.findById(req.params.id).lean().exec(callback);
+    }
+  },
+  function (err, results){
+
+    if(err){ 
+      next(err)
+      res.redirect(`/catalog/bikes/${cat}`)
+    }
+
+    const inputs = {
+      brand: results.bike.brand,
+      model: results.bike.model,
+    }
+    
+    // Render 'create_bike' with pre-filled form
+    res.render('create_bike', {
+      title: 'Update Bike',
+      wheels: isSelectedItem(results.wheels, results.bike.wheels) , 
+      suspensions_front: isSelectedItem(
+        results.suspension_front, results.bike.suspension_front
+      ),
+      suspensions_rear: isSelectedItem( 
+        results.suspension_rear, results.bike.suspension_rear
+      ),
+      gears: isSelectedItem( results.gear,results.bike.gear),
+      bike_category: isSelectedItem(results.bike_category, results.bike.bike_category),
+      inputs
+    })
+  })
 }
+
 //POST
-exports.post_update = function (req, res){
-  res.send('NOT IMPLEMENTED: post update bike ');
+exports.post_update = function (req, res, next) {
+  const cat = req.params.catName
+  Bike.findById(req.params.id)
+  .populate('suspension_front')
+  .populate('suspension_rear')
+  .populate('gear')
+  .populate('wheels')
+  .populate('bike_category')
+  .exec(
+  function (err, result) {
+    if(err) { 
+      next(err)
+      res.render( 'create_bike', {title: 'Update Bike', inputs: result, errors:err} )
+    }
+    if(!!result) {
+      debug(req.body)
+      Bike.findByIdAndUpdate(req.params.id, req.body , {},
+      function(err, result){
+        if (err) { return next(err) }
+        else res.redirect(`/catalog/bikes/${cat}`)
+      })
+    } else res.render( 'create_bike', {title: 'Update Bike', inputs: result, errors:[ {msg:'Failed to update'}] })
+  })
 }

@@ -109,10 +109,28 @@ exports.post_delete = function (req, res) {
 }
 
 // UPDATE
-exports.get_update = function (req, res) {
-  res.send('get_update')
+exports.get_update = function (req, res, next) {
+  Gear.findById(req.params.id).exec(callback)
+  function callback(err, result){
+    if(err){ return next(err) }
+    // Render 'create_gear' with pre-filled form
+    res.render('create_gear', {title: 'Update Gear', inputs: result})
+  }
 }
-
-exports.post_update= function (req, res) {
-  res.send('post_update')
+exports.post_update= function (req, res, next) {
+  Gear.findById(req.params.id).exec(
+  function (err, result) {
+    if(err) { 
+      next(err)
+      res.render( 'create_bike', {title: 'Update Gear', inputs: result, errors:err} )
+    }
+    if(!!result) {
+      debug(req.body)
+      Gear.findByIdAndUpdate(req.params.id, req.body , {},
+      function(err, result){
+        if (err) { return next(err) }
+        else res.redirect('/catalog/components/gears')
+      })
+    } else res.render( 'create_gear', {title: 'Update Gear', inputs: result, errors:[ {msg:'Failed to update'}] })
+  })
 }
