@@ -7,6 +7,7 @@
     "devstart": "nodemon ./bin/www"
   },
   "dependencies": {
+    "async": "^3.2.1",
     "body-parser": "^1.18.3",
     "bootstrap": "^5.0.2",
     "cookie-parser": "~1.4.4",
@@ -24,5 +25,17 @@
   },
   "devDependencies": {
     "prettier": "2.3.2"
-  }
+  },
+  "description": "Inventory App",
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mtavares21/TOP_Bike_Store.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mtavares21/TOP_Bike_Store/issues"
+  },
+  "homepage": "https://github.com/mtavares21/TOP_Bike_Store#readme"
 }
