@@ -307,6 +307,7 @@ exports.get_update = function (req, res, next) {
 //POST
 exports.post_update = function (req, res, next) {
   const cat = req.params.catName
+  const updatedValues = req.body;
   Bike.findById(req.params.id)
   .populate('suspension_front')
   .populate('suspension_rear')
@@ -321,7 +322,9 @@ exports.post_update = function (req, res, next) {
     }
     if(!!result) {
       debug(req.body)
-      Bike.findByIdAndUpdate(req.params.id, req.body , {},
+      if (req.body.suspension_rear === '')
+        updatedValues.suspension_rear = null;
+      Bike.findByIdAndUpdate(req.params.id, updatedValues, {},
       function(err, result){
         if (err) { return next(err) }
         else res.redirect(`/catalog/bikes/${cat}`)
